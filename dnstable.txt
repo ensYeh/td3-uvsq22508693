@@ -3,3 +3,4 @@ ecampus.uvsq.fr 193.51.25.12
 poste.uvsq.fr 193.51.31.154
 google.com 8.8.8.8
 github.com 140.82.121.4
+mohamed.com 2.2.2.2
