@@ -1,101 +1,134 @@
 package fr.uvsq.cprog.collex;
 
-import java.util.List;
-import java.util.Scanner;
+import fr.uvsq.cprog.dns.commandes.CommandeRechercheIP;
+import fr.uvsq.cprog.dns.commandes.CommandeRechercheNom;
+import fr.uvsq.cprog.dns.commandes.CommandeListeDomaine;
+import fr.uvsq.cprog.dns.commandes.CommandeAjout;
+import fr.uvsq.cprog.dns.commandes.CommandeQuitter;
 
 public class DnsTUI {
-    private final Scanner scanner;
     private final Dns dns;
 
-    public DnsTUI(final Dns dns) {
-        this.scanner = new Scanner(System.in);
+    public DnsTUI(Dns dns) {
         this.dns = dns;
     }
 
-    public Commande nextCommande() {
-        System.out.print("> ");
-
-        if (!scanner.hasNextLine()) {
-            return null;
+    public Commande nextCommande(String saisie) {
+        if (saisie == null || saisie.trim().isEmpty()) {
+            return new CommandeVide();
         }
 
-        String ligne = scanner.nextLine().trim();
+        String[] parties = saisie.trim().split("\\s+");
+        String premierePartie = parties[0].toLowerCase();
 
-        if (ligne.isEmpty()) {
-            return null;
+        try {
+            if (premierePartie.contains(".") && !premierePartie.equals("ls") && !premierePartie.equals("add")) {
+                return new CommandeRechercheIP(dns, saisie.trim());
+            }
+
+            if (estAdresseIP(premierePartie)) {
+                return new CommandeRechercheNom(dns, saisie.trim());
+            }
+
+            if (premierePartie.equals("ls")) {
+                return traiterCommandeLs(parties);
+            }
+
+            if (premierePartie.equals("add")) {
+                return traiterCommandeAdd(parties);
+            }
+
+            if (premierePartie.equals("quit") || premierePartie.equals("exit")) {
+                return new CommandeQuitter();
+            }
+
+            return new CommandeInconnue(saisie);
+
+        } catch (Exception e) {
+            return new CommandeErreur("Erreur d'analyse : " + e.getMessage());
         }
-
-        return analyserCommande(ligne);
     }
 
-    private Commande analyserCommande(final String ligne) {
-        String[] parties = ligne.split("\\s+");
+    private Commande traiterCommandeLs(String[] parties) {
+        if (parties.length < 2) {
+            return new CommandeErreur("Usage: ls [-a] domaine");
+        }
 
-        if (parties[0].equals("ls")) {
-            if (parties.length == 2) {
-                return new CommandeLs(dns, parties[1], false);
-            } else if (parties.length == 3 && parties[1].equals("-a")) {
-                return new CommandeLs(dns, parties[2], true);
+        boolean trierParIp = false;
+        String domaine = "";
+
+        if (parties[1].equals("-a")) {
+            trierParIp = true;
+            if (parties.length >= 3) {
+                domaine = parties[2];
             } else {
-                return new CommandeErreur("Format incorrect. Usage: ls [-a] domaine");
+                return new CommandeErreur("Usage: ls [-a] domaine");
             }
-        }
-
-        if (parties[0].equals("add")) {
-            if (parties.length == 3) {
-                return new CommandeAdd(dns, parties[1], parties[2]);
-            } else {
-                return new CommandeErreur("Format incorrect. Usage: add adresse.ip nom.machine");
-            }
-        }
-
-        if (parties[0].equals("quit") || parties[0].equals("exit")) {
-            return new CommandeQuitter();
-        }
-
-        if (parties.length == 1) {
-            String param = parties[0];
-
-            if (AdresseIP.estValide(param)) {
-                return new CommandeRechercheIP(dns, param);
-            }
-
-            if (NomMachine.estValide(param)) {
-                return new CommandeRechercheNom(dns, param);
-            }
-
-            return new CommandeErreur("Format invalide: ni adresse IP ni nom de machine valide");
-        }
-
-        return new CommandeErreur("Commande non reconnue: " + parties[0]);
-    }
-
-    public void affiche(final String resultat) {
-        if (resultat != null && !resultat.isEmpty()) {
-            System.out.println(resultat);
-        }
-    }
-
-    public void affiche(final List<DnsItem> items) {
-        if (items == null || items.isEmpty()) {
-            System.out.println("Aucun résultat");
-            return;
-        }
-
-        for (DnsItem item : items) {
-            System.out.println(item.toString());
-        }
-    }
-
-    public void affiche(final DnsItem item) {
-        if (item == null) {
-            System.out.println("Aucun résultat trouvé");
         } else {
-            System.out.println(item.toString());
+            domaine = parties[1];
+        }
+
+        return new CommandeListeDomaine(dns, domaine, trierParIp);
+    }
+
+    private Commande traiterCommandeAdd(String[] parties) {
+        if (parties.length != 3) {
+            return new CommandeErreur("Usage: add adresse_ip nom_machine");
+        }
+
+        String adresseIp = parties[1];
+        String nomMachine = parties[2];
+
+        return new CommandeAjout(dns, adresseIp, nomMachine);
+    }
+
+    private boolean estAdresseIP(String texte) {
+        try {
+            new AdresseIP(texte);
+            return true;
+        } catch (IllegalArgumentException e) {
+            return false;
         }
     }
 
-    public void fermer() {
-        scanner.close();
+    public void affiche(String resultat) {
+        System.out.println(resultat);
+    }
+
+    public void affichePrompt() {
+        System.out.print("> ");
+    }
+
+    private static class CommandeVide implements Commande {
+        @Override
+        public String execute() {
+            return "";
+        }
+    }
+
+    private static class CommandeInconnue implements Commande {
+        private final String commande;
+
+        public CommandeInconnue(String commande) {
+            this.commande = commande;
+        }
+
+        @Override
+        public String execute() {
+            return "Commande inconnue : " + commande;
+        }
+    }
+
+    private static class CommandeErreur implements Commande {
+        private final String message;
+
+        public CommandeErreur(String message) {
+            this.message = message;
+        }
+
+        @Override
+        public String execute() {
+            return message;
+        }
     }
 }

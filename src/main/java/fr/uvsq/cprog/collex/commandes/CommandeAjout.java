@@ -1,4 +1,4 @@
-package fr.uvsq.cprog.dns.commandes;
+package fr.uvsq.cprog.collex.commandes;
 
 import fr.uvsq.cprog.dns.AdresseIP;
 import fr.uvsq.cprog.dns.Commande;
