@@ -9,7 +9,7 @@ public class CommandeRechercheIP implements Commande {
     private final Dns dns;
     private final String NomMachine;
 
-    public CommandeRechercheIP(final Dns dns, final String NomMachine) {
+    public CommandeRechercheIP(Dns dns, String NomMachine) {
         this.dns = dns;
         this.NomMachine = NomMachine;
     }
@@ -17,16 +17,16 @@ public class CommandeRechercheIP implements Commande {
     @Override
     public String execute() {
         try {
-            NomMachine nom = new NomMachine(nomMachine);
+            NomMachine nom = new NomMachine(this.NomMachine);
             DnsItem item = dns.getItem(nom);
 
             if (item != null) {
                 return item.getAdresseIp().getIp();
             } else {
-                return "ERREUR : Nom de machine non trouvé : " + nomMachine;
+                return "ERREUR : Nom de machine non trouvé : " + this.NomMachine;
             }
         } catch (IllegalArgumentException e) {
-            return "ERREUR : Nom de machine invalide : " + nomMachine;
+            return "ERREUR : Nom de machine invalide : " + this.NomMachine;
         }
     }
 

@@ -44,7 +44,7 @@ public class DnsApp {
                     dnsTui.affiche(resultat);
                 }
 
-                if (commande instanceof fr.uvsq.cprog.dns.commandes.CommandeQuitter) {
+                if (commande instanceof fr.uvsq.cprog.collex.commandes.CommandeQuitter) {
                     running = false;
                 }
 

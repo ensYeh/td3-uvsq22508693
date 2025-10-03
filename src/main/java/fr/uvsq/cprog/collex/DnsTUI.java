@@ -1,10 +1,10 @@
 package fr.uvsq.cprog.collex;
 
-import fr.uvsq.cprog.dns.commandes.CommandeRechercheIP;
-import fr.uvsq.cprog.dns.commandes.CommandeRechercheNom;
-import fr.uvsq.cprog.dns.commandes.CommandeListeDomaine;
-import fr.uvsq.cprog.dns.commandes.CommandeAjout;
-import fr.uvsq.cprog.dns.commandes.CommandeQuitter;
+import fr.uvsq.cprog.collex.commandes.CommandeRechercheIP;
+import fr.uvsq.cprog.collex.commandes.CommandeRechercheNom;
+import fr.uvsq.cprog.collex.commandes.CommandeListeDomaine;
+import fr.uvsq.cprog.collex.commandes.CommandeAjout;
+import fr.uvsq.cprog.collex.commandes.CommandeQuitter;
 
 public class DnsTUI {
     private final Dns dns;

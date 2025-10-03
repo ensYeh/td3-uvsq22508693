@@ -1,8 +1,8 @@
 package fr.uvsq.cprog.collex.commandes;
 
-import fr.uvsq.cprog.dns.Commande;
-import fr.uvsq.cprog.dns.Dns;
-import fr.uvsq.cprog.dns.DnsItem;
+import fr.uvsq.cprog.collex.Commande;
+import fr.uvsq.cprog.collex.Dns;
+import fr.uvsq.cprog.collex.DnsItem;
 import java.util.List;
 
 public class CommandeListeDomaine implements Commande {
