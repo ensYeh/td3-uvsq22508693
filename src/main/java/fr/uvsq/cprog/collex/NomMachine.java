@@ -12,7 +12,7 @@ public class NomMachine {
         this.nomComplet = nomComplet;
 
         int premierPoint = nomComplet.indexOf('.');
-        if (premierPoint != 1) {
+        if (premierPoint != -1) {
             this.nomMachine = nomComplet.substring(0, premierPoint);
             this.domaine = nomComplet.substring(premierPoint + 1);
         } else {

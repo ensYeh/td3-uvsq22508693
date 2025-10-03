@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Properties;
 
 public class Dns {
-    private final Liste<DnsItem> items;
+    private final List<DnsItem> items;
     private final String fichierBase;
     private static final String FICHIER_CONFIG = "config.properties";
 
