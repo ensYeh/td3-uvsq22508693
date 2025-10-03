@@ -1,5 +1,12 @@
-package fr.uvsq.cprog.collex.commandes;
+package fr.uvsq.cprog.dns.commandes;
 
-public class CommandeQuitter {
+import fr.uvsq.cprog.dns.Commande;
 
+public class CommandeQuitter implements Commande {
+
+    @Override
+    public String execute() {
+        System.exit(0);
+        return "Au revoir !";
+    }
 }

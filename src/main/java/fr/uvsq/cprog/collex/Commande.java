@@ -1,5 +1,5 @@
 package fr.uvsq.cprog.collex;
 
-public class Commande {
-
+public interface Commande {
+    String execute();
 }
