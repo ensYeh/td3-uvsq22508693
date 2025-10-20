@@ -22,12 +22,13 @@ public class DnsTUI {
         String premierePartie = parties[0].toLowerCase();
 
         try {
-            if (premierePartie.contains(".") && !premierePartie.equals("ls") && !premierePartie.equals("add")) {
-                return new CommandeRechercheIP(dns, saisie.trim());
-            }
 
             if (estAdresseIP(premierePartie)) {
                 return new CommandeRechercheNom(dns, saisie.trim());
+            }
+
+            if (premierePartie.contains(".") && !premierePartie.equals("ls") && !premierePartie.equals("add")) {
+                return new CommandeRechercheIP(dns, saisie.trim());
             }
 
             if (premierePartie.equals("ls")) {

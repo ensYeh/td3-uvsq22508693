@@ -70,7 +70,7 @@ public class Dns {
 
     public DnsItem getItem(AdresseIP ip) {
         for (DnsItem item : items) {
-            if (item.getAdresseIp().getIp().equals(ip.getIp())) {
+            if (item.getAdresseIp().getIp().trim().equals(ip.getIp().trim())) {
                 return item;
             }
         }

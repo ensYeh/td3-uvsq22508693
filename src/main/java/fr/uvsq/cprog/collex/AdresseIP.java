@@ -29,4 +29,14 @@ public class AdresseIP {
         return ip;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (!(o instanceof AdresseIP))
+            return false;
+        AdresseIP other = (AdresseIP) o;
+        return this.ip.trim().equals(other.ip.trim());
+    }
+
 }
